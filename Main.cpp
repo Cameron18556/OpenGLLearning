@@ -48,13 +48,46 @@ int main()
 
 	//init end
 
+	//making vertex shader
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glCompileShader(vertexShader);
+
+	//making fragment shader
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
+
+
+	//putting both shaders into a shader program (i think the shader program is like a unity material that just wraps everything to do with rendering in one package)
+	GLuint shaderProgram = glCreateProgram();
+
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+
+	//delete the shaders since they are now in the program
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+
+
+
+	GLuint VBO;
+
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+
+
 
 	//specify the new background colour (the background is white by defualt)
 	glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-	//wite the new colour to the back buffer
+	//wite the new colour to the back frame buffer
 	glClear(GL_COLOR_BUFFER_BIT);
-	//bring the back buffer to the front 
+	//bring the back frame buffer to the front 
 	glfwSwapBuffers(window);
 
 
