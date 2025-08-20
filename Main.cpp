@@ -29,19 +29,16 @@ int main()
 	//vertices for the triangle
 	GLfloat vertices[] =
 	{
-		-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-		0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-		0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,
-		-0.5f/ 2, 0.5f * float(sqrt(3)) / 6, 0.0f,
-		0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,
-		-0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f,
+		-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, //lower left
+		0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // lower right
+		0.5f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, //upper right
+		-0.5f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, //upper left
 	};
 
 	GLuint indices[] =
 	{
-		0, 3, 5,
-		3, 2, 4,
-		5, 4, 1
+		0, 3, 1,
+		1, 2, 3
 	};
 
 	GLFWwindow* window = glfwCreateWindow(800, 800, "Cool rendering window", NULL, NULL);
@@ -142,7 +139,8 @@ int main()
 		//bind the VAO to make it the current vertex array that gets used
 		glBindVertexArray(VAO);
 		//draw the triabgles
-		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 
 		//bring the back frame buffer to the front 
 		glfwSwapBuffers(window);
