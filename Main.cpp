@@ -80,6 +80,9 @@ int main()
 	//gets the id of the uniform "scale" (its stored in defualt.vertex btw)
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
 
+	float lastTime = 0.0f;
+	float scale = 0.0f;
+
 
 	//while loop that keeps the window open if the x button hasnt been pressed
 	while (!glfwWindowShouldClose(window))
@@ -91,8 +94,13 @@ int main()
 
 		//change the current shader we are using
 		shaderProgram.Activate();
+		if (glfwGetTime() - lastTime > 1.0f / 60.0f)
+		{
+			scale += 0.05f;
+			lastTime = glfwGetTime();
+		}
 		//assigns 0.5f to the uniform "scale" wich uniID points to NOTE: MUST BE DONE WHILE THE SHADER PROGRAM IS ACTIVE
-		glUniform1f(uniID, 0.5f);
+		glUniform1f(uniID, 0.1f * sin(scale));
 		//bind the VAO to make it the current vertex array that gets used
 		VAO1.Bind();
 		//draw the triabgles
