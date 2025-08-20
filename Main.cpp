@@ -1,7 +1,9 @@
 #include<iostream>
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
+#include<stb/stb_image.h>
 
+#include"Texture.h"
 #include"ShaderClass.h"
 #include"VAO.h"
 #include"VBO.h"
@@ -36,20 +38,17 @@ int main()
 	//vertices for the triangle
 	GLfloat vertices[] =
 	{
-		//co ordinates									colours
-		-0.5f, -0.5f * float(sqrt(3)) / 3, 		0.0f,	0.7f, 0.3f, 0.02f,
-		0.5f, -0.5f * float(sqrt(3)) / 3, 		0.0f,	0.7f, 0.3f, 0.02,
-		0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 	0.0f,	0.9f, 0.6f, 0.32f,
-		-0.5f / 2, 0.5f * float(sqrt(3)) / 6,	0.0f,	0.8f, 0.45f, 0.17f,
-		0.5f / 2, 0.5f * float(sqrt(3)) / 6, 	0.0f,	0.8f, 0.45f, 0.17f,
-		-0.0f, -0.5f * float(sqrt(3)) / 3, 		0.0f,	0.7f, 0.3f, 0.02f,
+		//co ordinates			colours
+		-0.5f, -0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		-0.5f, 0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	0.0f, 1.0f,
+		0.5f, 0.5f, 0.0f,		0.0f, 0.0f, 1.0f,	1.0f, 1.0f,
+		0.5f, -0.5f, 0.0f,		1.0f, 1.0f, 1.f,	1.0f, 0.0f,
 	};
 
 	GLuint indices[] =
 	{
-		0, 3, 5,
-		3, 2, 4,
-		5, 4, 1
+		0, 2, 1,
+		0, 3, 2
 	};
 
 
@@ -69,9 +68,10 @@ int main()
 	EBO EBO1(indices, sizeof(indices));
 
 	//Links the positions in VBO1 to VAO1
-	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
+	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
 	//Links the RGB in VBO1 to VAO1
-	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	//Unbinds all to prevent accidentaly modifiying them
 	VAO1.Unbind();
 	VBO1.Unbind();
@@ -79,6 +79,13 @@ int main()
 
 	//gets the id of the uniform "scale" (its stored in defualt.vertex btw)
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
+
+
+	// texture
+
+	Texture garfeild("gaf.jpg", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+	garfeild.texUnint(shaderProgram, "tex0", 0);
+	
 
 
 	//while loop that keeps the window open if the x button hasnt been pressed
@@ -93,10 +100,11 @@ int main()
 		shaderProgram.Activate();
 		//assigns 0.5f to the uniform "scale" wich uniID points to NOTE: MUST BE DONE WHILE THE SHADER PROGRAM IS ACTIVE
 		glUniform1f(uniID, 0.5f);
+		garfeild.Bind();
 		//bind the VAO to make it the current vertex array that gets used
 		VAO1.Bind();
 		//draw the triabgles
-		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		//bring the back frame buffer to the front 
 		glfwSwapBuffers(window);
@@ -109,6 +117,7 @@ int main()
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
+	garfeild.Delete();
 	shaderProgram.Delete();
 
 	glfwDestroyWindow(window);
