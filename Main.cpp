@@ -31,7 +31,17 @@ int main()
 	{
 		-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
 		0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-		0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f
+		0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,
+		-0.5f/ 2, 0.5f * float(sqrt(3)) / 6, 0.0f,
+		0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,
+		-0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f,
+	};
+
+	GLuint indices[] =
+	{
+		0, 3, 5,
+		3, 2, 4,
+		5, 4, 1
 	};
 
 	GLFWwindow* window = glfwCreateWindow(800, 800, "Cool rendering window", NULL, NULL);
@@ -79,11 +89,12 @@ int main()
 
 
 	//VBO = vertex buffer object; VAO = Vertex array object
-	GLuint VAO, VBO;
+	GLuint VAO, VBO, EBO;
 
 	//generate the VAO and VBO with only one object each
 	glGenVertexArrays(1, &VAO); //IMPORTANT: VAO MUST be generated before the VBO
 	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
 
 	//make the VAO the current vertex array by binding it
 	glBindVertexArray(VAO);
@@ -93,6 +104,10 @@ int main()
 	//apply the array "vertices" to the VBO
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+
 	//tell the VAO how to read the VBO
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	//enable the VAO(??)
@@ -101,6 +116,7 @@ int main()
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 
 
@@ -125,8 +141,8 @@ int main()
 		glUseProgram(shaderProgram);
 		//bind the VAO to make it the current vertex array that gets used
 		glBindVertexArray(VAO);
-		//draw the array "verices" as a triangle
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		//draw the triabgles
+		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 
 		//bring the back frame buffer to the front 
 		glfwSwapBuffers(window);
@@ -138,6 +154,7 @@ int main()
 	//end program cleanup
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 	glDeleteProgram(shaderProgram);
 
 	glfwDestroyWindow(window);
