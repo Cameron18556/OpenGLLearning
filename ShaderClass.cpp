@@ -34,6 +34,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
 	glShaderSource(vertexShader, 1, &vertexSource, NULL);
 	//compile shader
 	glCompileShader(vertexShader);
+	compileErrors(vertexShader, "VERTEX");
 
 	//making fragment shader
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -41,7 +42,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
 	glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
 	//compile shader
 	glCompileShader(fragmentShader);
-
+	compileErrors(vertexShader, "FRAGMENT");
 
 	//putting both shaders into a shader program (i think the shader program is like a unity material that just wraps everything to do with rendering in one package)
 	ID = glCreateProgram();
@@ -50,6 +51,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
 	glAttachShader(ID, fragmentShader);
 	//wrap up the shader program (i imagaine this is like saving or recompiling it now that the shaders are in it)
 	glLinkProgram(ID);
+	compileErrors(ID, "PROGRAM");
 
 	//delete the shaders since they are now in the program
 	glDeleteShader(vertexShader);
@@ -64,4 +66,29 @@ void Shader::Activate()
 void Shader::Delete()
 {
 	glDeleteProgram(ID);
+}
+
+//checks if the differant shaders have compiled properly
+void Shader::compileErrors(unsigned int shader, const char* type)
+{
+	GLint hasCompiled;
+	char infoLog[1024];
+	if (type != "PROGRAM")
+	{
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &hasCompiled);
+		if (hasCompiled == GL_FALSE)
+		{
+			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+			std::cout << "SHADER_COMPILATION_ERROR for:" << type << "\n" << std::endl;
+		}
+	}
+	else
+	{
+		glGetProgramiv(shader, GL_COMPILE_STATUS, &hasCompiled);
+		if(hasCompiled == GL_FALSE)
+		{
+			glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+			std::cout << "SHADER_LINKING_ERROR for:" << type << "\n" << std::endl;
+		}
+	}
 }
