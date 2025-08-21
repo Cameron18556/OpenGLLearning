@@ -39,9 +39,9 @@ int main()
 	GLfloat vertices[] =
 	{
 		//co ordinates			colours
-		-0.5f, -0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	0.0f, 0.0f, // ll corner
-		0.0f, 0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	1.5f, 3.0f, // u corner 
-		0.5f, -0.5f, 0.0f,		1.0f, 1.0f, 1.0f,	3.0f, 0.0f, // lr corne
+		-0.5f, -0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	-1.0f, -1.0f, // ll corner
+		0.0f, 0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	0.5f, 2.0f, // u corner 
+		0.5f, -0.5f, 0.0f,		1.0f, 1.0f, 1.0f,	2.0f, -1.0f, // lr corne
 	};
 
 	GLuint indices[] =
