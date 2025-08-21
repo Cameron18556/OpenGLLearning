@@ -39,16 +39,14 @@ int main()
 	GLfloat vertices[] =
 	{
 		//co ordinates			colours
-		-0.5f, -0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		-0.5f, 0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	0.0f, 3.0f,
-		0.5f, 0.5f, 0.0f,		0.0f, 0.0f, 1.0f,	3.0f, 3.0f,
-		0.5f, -0.5f, 0.0f,		1.0f, 1.0f, 1.f,	3.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	0.0f, 0.0f, // ll corner
+		0.0f, 0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	1.5f, 3.0f, // u corner 
+		0.5f, -0.5f, 0.0f,		1.0f, 1.0f, 1.0f,	3.0f, 0.0f, // lr corne
 	};
 
 	GLuint indices[] =
 	{
-		0, 2, 1,
-		0, 3, 2
+		0, 2, 1
 	};
 
 
@@ -104,7 +102,7 @@ int main()
 		//bind the VAO to make it the current vertex array that gets used
 		VAO1.Bind();
 		//draw the triabgles
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 
 		//bring the back frame buffer to the front 
 		glfwSwapBuffers(window);
