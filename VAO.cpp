@@ -7,7 +7,7 @@ VAO::VAO()
 }
 
 //Links a VBO attribute with this VAO using a certain layout
-void VAO::LinkAttrib(VBO VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset)
+void VAO::LinkAttrib(VBO& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset)
 {
 	//type is the array type of the vertex array
 	//numComponents is how many components are in one thing in the vertex array until you get to the next thing (eg. xyz pos is three big(three floats) and so is rgb)
