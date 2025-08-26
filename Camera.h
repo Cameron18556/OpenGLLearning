@@ -27,7 +27,7 @@ class Camera
 		int height;
 
 		//the camera movement speed (if changing change in Input() too)
-		float speed = 0.5f;
+		float speed = 7.5f;
 		//the camera look speed
 		float sensitivity = 100.0f;
 
