@@ -76,7 +76,7 @@ int main()
 		//allow camera input
 		camera.Inputs(window, deltaTime);
 		//updates the camera matrix then sends that to the vertex shader
-		camera.updateMatrix(45.0f, 0.1f, 100.0f);
+		camera.updateMatrix(45.0f, 0.1f, 1000.0f);
 
 
 		//draw stuff here
