@@ -50,11 +50,12 @@ int main()
 
 	// enables the depth buufer
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 
 	//makes camera
 	Camera camera(width, height, glm::vec3(0.0f, 1.0f, 2.0f));
 
-	Model model("models/sword/scene.gltf");
+	Model model("models/map/scene.gltf");
 
 	//for keeping track of delta time in the loop
 	double prevTime = glfwGetTime();
@@ -68,7 +69,7 @@ int main()
 		prevTime = crntTime;
 
 		//specify the new background colour (the background is white by defualt)
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+		glClearColor(0.85f, 0.85f, 0.90f, 1.0f);
 		//cleans the back buffer and the depth buffer 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
