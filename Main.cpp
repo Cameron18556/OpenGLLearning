@@ -50,12 +50,15 @@ int main()
 
 	// enables the depth buufer
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
+	//glDepthFunc(GL_LESS);
+
+	glEnable(GL_STENCIL_TEST);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 	//makes camera
 	Camera camera(width, height, glm::vec3(0.0f, 1.0f, 2.0f));
 
-	Model model("models/map/scene.gltf");
+	Model model("models/crow/scene.gltf");
 
 	//for keeping track of delta time in the loop
 	double prevTime = glfwGetTime();
@@ -71,7 +74,7 @@ int main()
 		//specify the new background colour (the background is white by defualt)
 		glClearColor(0.85f, 0.85f, 0.90f, 1.0f);
 		//cleans the back buffer and the depth buffer 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 
 		//allow camera input

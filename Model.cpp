@@ -177,34 +177,34 @@ std::vector<GLuint> Model::getIndices(json accessor)
 
 	unsigned int beginningOfData = byteOffset + accByteOffset;
 
-	if (componentType == 5125)
+	if (componentType == 5125) // UNSIGNED_INT (4 bytes)
 	{
-		for (unsigned int i = beginningOfData; i < byteOffset + accByteOffset + count * 4; i)
+		for (unsigned int j = 0; j < count; ++j)
 		{
-			unsigned char bytes[] = { data[i++], data[i++], data[i++], data[i++] };
-			unsigned int value;
-			std::memcpy(&value, bytes, sizeof(float));
-			indices.push_back((GLuint)value);
+			unsigned int offset = beginningOfData + j * 4;
+			unsigned int value = 0;
+			std::memcpy(&value, &data[offset], sizeof(value));
+			indices.push_back(static_cast<GLuint>(value));
 		}
 	}
-	else if (componentType == 5123)
+	else if (componentType == 5123) // UNSIGNED_SHORT (2 bytes)
 	{
-		for (unsigned int i = beginningOfData; i < byteOffset + accByteOffset + count * 2; i)
+		for (unsigned int j = 0; j < count; ++j)
 		{
-			unsigned char bytes[] = { data[i++], data[i++], data[i++], data[i++] };
-			unsigned short value;
-			std::memcpy(&value, bytes, sizeof(float));
-			indices.push_back((GLuint)value);
+			unsigned int offset = beginningOfData + j * 2;
+			unsigned short value = 0;
+			std::memcpy(&value, &data[offset], sizeof(value));
+			indices.push_back(static_cast<GLuint>(value));
 		}
 	}
-	else if (componentType == 5122)
+	else if (componentType == 5122) // SHORT (2 bytes, signed)
 	{
-		for (unsigned int i = beginningOfData; i < byteOffset + accByteOffset + count * 2; i)
+		for (unsigned int j = 0; j < count; ++j)
 		{
-			unsigned char bytes[] = { data[i++], data[i++], data[i++], data[i++] };
-			short value;
-			std::memcpy(&value, bytes, sizeof(float));
-			indices.push_back((GLuint)value);
+			unsigned int offset = beginningOfData + j * 2;
+			short value = 0;
+			std::memcpy(&value, &data[offset], sizeof(value));
+			indices.push_back(static_cast<GLuint>(value));
 		}
 	}
 
