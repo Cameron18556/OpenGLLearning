@@ -35,6 +35,8 @@ int main()
 	//makes a shader objects with the default shaders "default.vert" and "default.frag"
 	Shader shaderProgram("default.vert", "default.frag");
 
+	Shader outliningProgram("outlining.vert", "outlining.frag");
+
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -72,7 +74,7 @@ int main()
 		prevTime = crntTime;
 
 		//specify the new background colour (the background is white by defualt)
-		glClearColor(0.85f, 0.85f, 0.90f, 1.0f);
+		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		//cleans the back buffer and the depth buffer 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -84,7 +86,21 @@ int main()
 
 
 		//draw stuff here
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
 		model.Draw(shaderProgram, camera);
+
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+
+		outliningProgram.Activate();
+		glUniform1f(glGetUniformLocation(outliningProgram.ID, "outlining"), 0.08f);
+		model.Draw(outliningProgram, camera);
+
+		glStencilMask(0xFF);
+		glStencilFunc(GL_ALWAYS, 0, 0xFF);
+		glEnable(GL_DEPTH_TEST);
 
 		//bring the back frame buffer to the front 
 		glfwSwapBuffers(window);
