@@ -61,6 +61,7 @@ int main()
 	Camera camera(width, height, glm::vec3(0.0f, 1.0f, 2.0f));
 
 	Model model("models/crow/scene.gltf");
+	Model outline("models/crow-outline/scene.gltf");
 
 	//for keeping track of delta time in the loop
 	double prevTime = glfwGetTime();
@@ -95,8 +96,7 @@ int main()
 		glDisable(GL_DEPTH_TEST);
 
 		outliningProgram.Activate();
-		glUniform1f(glGetUniformLocation(outliningProgram.ID, "outlining"), 0.08f);
-		model.Draw(outliningProgram, camera);
+		outline.Draw(outliningProgram, camera);
 
 		glStencilMask(0xFF);
 		glStencilFunc(GL_ALWAYS, 0, 0xFF);
