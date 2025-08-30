@@ -35,8 +35,6 @@ int main()
 	//makes a shader objects with the default shaders "default.vert" and "default.frag"
 	Shader shaderProgram("default.vert", "default.frag");
 
-	Shader outliningProgram("outlining.vert", "outlining.frag");
-
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -52,55 +50,56 @@ int main()
 
 	// enables the depth buufer
 	glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LESS);
 
-	glEnable(GL_STENCIL_TEST);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+	glFrontFace(GL_CCW);
 
 	//makes camera
 	Camera camera(width, height, glm::vec3(0.0f, 1.0f, 2.0f));
 
 	Model model("models/crow/scene.gltf");
-	Model outline("models/crow-outline/scene.gltf");
 
 	//for keeping track of delta time in the loop
 	double prevTime = glfwGetTime();
+	double crntTime = glfwGetTime();
+	double deltaTime = 0.0f;
+	unsigned int counter = 0;
 
 	//while loop that keeps the window open if the x button hasnt been pressed
 	while (!glfwWindowShouldClose(window))
 	{
 		//finding delta time
-		double crntTime = glfwGetTime();
-		float deltaTime = crntTime - prevTime;
-		prevTime = crntTime;
+		crntTime = glfwGetTime();
+		deltaTime = crntTime - prevTime;
+		counter++;
+
+		if (deltaTime >= 1.0 / 30.0)
+		{
+			std::string FPS = std::to_string((1.0 / deltaTime) * counter);
+			std::string milliSecs = std::to_string((deltaTime / counter) * 1000);
+			std::string newTitle = "Cool rendering window. FPS: " + FPS + " milliseconds: " + milliSecs;
+			glfwSetWindowTitle(window, newTitle.c_str());
+			prevTime = crntTime;
+			counter = 0;
+		}
 
 		//specify the new background colour (the background is white by defualt)
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		//cleans the back buffer and the depth buffer 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 		//allow camera input
-		camera.Inputs(window, deltaTime);
+		camera.Inputs(window, (float)deltaTime);
 		//updates the camera matrix then sends that to the vertex shader
 		camera.updateMatrix(45.0f, 0.1f, 1000.0f);
 
 
-		//draw stuff here
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilMask(0xFF);
+		//draw stuff 
 		model.Draw(shaderProgram, camera);
 
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		glDisable(GL_DEPTH_TEST);
 
-		outliningProgram.Activate();
-		outline.Draw(outliningProgram, camera);
-
-		glStencilMask(0xFF);
-		glStencilFunc(GL_ALWAYS, 0, 0xFF);
-		glEnable(GL_DEPTH_TEST);
 
 		//bring the back frame buffer to the front 
 		glfwSwapBuffers(window);
